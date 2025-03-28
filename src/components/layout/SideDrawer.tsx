@@ -1,6 +1,8 @@
 // src/components/layout/SideDrawer.tsx
+import React from "react"; // Added React import
 import Link from "next/link";
 import MuiDrawer from "@mui/material/Drawer";
+import Box from "@mui/material/Box"; // Import Box
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -9,9 +11,9 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { styled, Theme, CSSObject } from "@mui/material/styles";
-import { ChevronLeft, ChevronRightIcon } from "lucide-react";
-// import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-// import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+// Corrected Lucide Icon imports
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 // Import navigation config and types
 import {
@@ -22,10 +24,9 @@ import {
   UserRole,
 } from "@/config/navigation";
 
-// Import Auth context hook
 import { useAuth } from "@/providers/AuthProviders";
-
-// --- Styled Components and Mixins (Moved Here) ---
+import { Typography } from "@mui/material";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -48,17 +49,21 @@ const closedMixin = (theme: Theme): CSSObject => ({
   },
 });
 
+// Updated DrawerHeader: removed justifyContent, added padding for logo
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  ...theme.mixins.toolbar, // necessary for content to be below app bar
+  // justifyContent: "flex-end", // Removed to allow logo at start
+  padding: theme.spacing(0, 1), // Keep horizontal padding
+  position: "relative", // Needed for absolute positioning of button if kept
+  ...theme.mixins.toolbar,
 }));
+
+// Keep StyledIconButton as you defined it
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   position: "absolute",
-  top: "5%",
-  right: "-15px",
+  top: "50%",
+  right: "-10px",
   transform: "translateY(-50%)",
   borderRadius: "50%",
   boxShadow: theme.shadows[3],
@@ -98,7 +103,6 @@ const renderNavList = (
     return userRole && item.roles.includes(userRole); // Show if user has one of the required roles
   });
 
-  // Don't render the List component at all if there are no items to show
   if (visibleItems.length === 0) {
     return null;
   }
@@ -136,21 +140,58 @@ const renderNavList = (
 // Props for SideDrawer component
 interface SideDrawerProps {
   open: boolean;
-  handleDrawerClose: () => void;
+  handleDrawerClose: () => void; // Renamed for clarity, maps to closing action
 }
 
 export function SideDrawer({ open, handleDrawerClose }: SideDrawerProps) {
-  const { isAuthenticated, user } = useAuth(); // Get authentication status
+  const { isAuthenticated, user } = useAuth();
   const userRole = (user?.role as UserRole | null) ?? "guest";
+
+  const ToggleIcon = open ? ChevronLeft : ChevronRight;
 
   return (
     <Drawer variant="permanent" open={open}>
       <DrawerHeader>
-        <StyledIconButton onClick={handleDrawerClose}>
-          {open ? <ChevronLeft /> : <ChevronRightIcon />}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexGrow: 1,
+            pl: 2,
+            opacity: 1,
+            transition: (theme) =>
+              theme.transitions.create("opacity", {
+                duration: theme.transitions.duration.enteringScreen,
+              }),
+          }}>
+          <Link
+            href="/"
+            passHref
+            style={{ display: "inline-flex", alignItems: "center" }}>
+            {/* <Image
+              src="/favicon.ico" // Assumes favicon is in /public folder
+              alt="Logo"
+              width={32} // Adjust size as needed
+              height={32}
+              style={{ marginRight: "8px" }}
+            /> */}
+            <Icon fontSize={20} icon={'ant-design:code-filled'}/>
+            {open && (
+              <Typography variant="h6" noWrap>
+                CodeMaster
+              </Typography>
+            )}
+          </Link>
+        </Box>
+
+        <StyledIconButton
+          onClick={handleDrawerClose}
+          aria-label={open ? "close drawer" : "open drawer"}>
+          <ToggleIcon size={15} />
         </StyledIconButton>
       </DrawerHeader>
       <Divider />
+
       {renderNavList(mainNavItems, open, isAuthenticated, userRole)}
 
       {isAuthenticated && (
