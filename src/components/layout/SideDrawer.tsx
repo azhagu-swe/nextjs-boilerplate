@@ -9,7 +9,9 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { styled, Theme, CSSObject } from "@mui/material/styles";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, ChevronRightIcon } from "lucide-react";
+// import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+// import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 // Import navigation config and types
 import {
@@ -53,6 +55,18 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar, // necessary for content to be below app bar
 }));
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+  position: "absolute",
+  top: "5%",
+  right: "-15px",
+  transform: "translateY(-50%)",
+  borderRadius: "50%",
+  boxShadow: theme.shadows[3],
+  "&:hover": {
+    backgroundColor: theme.palette.action.hover,
+    color: theme.palette.primary.main,
+  },
+}));
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -70,58 +84,55 @@ const Drawer = styled(MuiDrawer, {
     "& .MuiDrawer-paper": closedMixin(theme),
   }),
 }));
-// --- End Styled Components ---
 
-// Helper function to render Navigation List Items// Helper function to render Navigation List Items
 const renderNavList = (
-    items: NavItem[],
-    open: boolean,
-    isAuthenticated: boolean,
-    userRole: UserRole | null
-  ) => {
-    // Filter items based on auth status and role
-    const visibleItems = items.filter((item) => {
-      if (item.public) return true; // Show public items always
-      if (!isAuthenticated) return false; // Hide non-public if not logged in
-      if (!item.roles) return true; // Show if no specific roles are required (to any authenticated user)
-      return userRole && item.roles.includes(userRole); // Show if user has one of the required roles
-    });
-  
-    // Don't render the List component at all if there are no items to show
-    if (visibleItems.length === 0) {
-       return null;
-    }
-  
-    return (
-      <List>
-        {/* FIX: Map over the filtered 'visibleItems' array */}
-        {visibleItems.map((item) => (
-          <ListItem key={item.text} disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              component={Link}
-              href={item.href}
-              title={item.text} // Add title for tooltip when closed
-              aria-label={item.text}
+  items: NavItem[],
+  open: boolean,
+  isAuthenticated: boolean,
+  userRole: UserRole | null
+) => {
+  const visibleItems = items.filter((item) => {
+    if (item.public) return true;
+    if (!isAuthenticated) return false;
+    if (!item.roles) return true;
+    return userRole && item.roles.includes(userRole); // Show if user has one of the required roles
+  });
+
+  // Don't render the List component at all if there are no items to show
+  if (visibleItems.length === 0) {
+    return null;
+  }
+
+  return (
+    <List>
+      {/* FIX: Map over the filtered 'visibleItems' array */}
+      {visibleItems.map((item) => (
+        <ListItem key={item.text} disablePadding sx={{ display: "block" }}>
+          <ListItemButton
+            component={Link}
+            href={item.href}
+            title={item.text} // Add title for tooltip when closed
+            aria-label={item.text}
+            sx={{
+              minHeight: 48,
+              justifyContent: open ? "initial" : "center",
+              px: 2.5,
+            }}>
+            <ListItemIcon
               sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
+                minWidth: 0,
+                mr: open ? 3 : "auto",
+                justifyContent: "center",
               }}>
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
-                }}>
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    );
-  };
+              {item.icon}
+            </ListItemIcon>
+            <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+          </ListItemButton>
+        </ListItem>
+      ))}
+    </List>
+  );
+};
 // Props for SideDrawer component
 interface SideDrawerProps {
   open: boolean;
@@ -135,16 +146,13 @@ export function SideDrawer({ open, handleDrawerClose }: SideDrawerProps) {
   return (
     <Drawer variant="permanent" open={open}>
       <DrawerHeader>
-        <IconButton onClick={handleDrawerClose} aria-label="close drawer">
-          {/* Add theme.direction === 'rtl' ? <ChevronRight /> : <ChevronLeft /> if supporting RTL */}
-          <ChevronLeft />
-        </IconButton>
+        <StyledIconButton onClick={handleDrawerClose}>
+          {open ? <ChevronLeft /> : <ChevronRightIcon />}
+        </StyledIconButton>
       </DrawerHeader>
       <Divider />
-      {/* Main Nav Items - Always visible */}
       {renderNavList(mainNavItems, open, isAuthenticated, userRole)}
 
-      {/* Secondary Nav Items - Only visible if authenticated */}
       {isAuthenticated && (
         <>
           <Divider />

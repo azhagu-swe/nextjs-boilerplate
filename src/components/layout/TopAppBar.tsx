@@ -34,16 +34,16 @@ interface CustomAppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
 const AppBar = styled(MuiAppBar, {
-  /* ... styled component definition ... */
 })<CustomAppBarProps>(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
+  // zIndex: theme.zIndex.drawer + 1,
+  width: `calc(100% - ${drawerWidth-150}px)`,
   transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
     marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+    width: `calc(100% - ${drawerWidth+20}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -88,8 +88,7 @@ export function TopAppBar({ open, handleDrawerOpen, title }: TopAppBarProps) {
   return (
     <AppBar position="fixed" open={open} enableColorOnDark>
       <Toolbar>
-        {/* Menu Icon (Only show if user is authenticated and inside app layout) */}
-        {
+        {/* {
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -98,7 +97,7 @@ export function TopAppBar({ open, handleDrawerOpen, title }: TopAppBarProps) {
             sx={{ marginRight: 5, ...(open && { display: "none" }) }}>
             <MenuIcon />
           </IconButton>
-        }
+        } */}
 
         {/* App Title */}
         <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
