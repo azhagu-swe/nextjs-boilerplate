@@ -11,39 +11,28 @@ import {
   CardActions,
   Button,
   Chip,
-  Alert, // For case where no courses are found
+  Alert,
 } from "@mui/material";
-import { BookOpen, Library, BarChart } from "lucide-react"; // Icons for title and cards
-
-// Assuming direct JSON import for mock data (replace with API call later)
+import { BookOpen, Library, BarChart } from "lucide-react";
 import coursesData from "@/data/courses.json";
-import { Course } from "@/types"; // Import your Course type
+import { Course } from "@/types";
 
-// --- Mock Data Fetching ---
-// In a real app, fetch this from your API, perhaps with pagination
 async function getAllCourses(): Promise<Course[]> {
-  // Simulate fetching all courses
-  await new Promise((resolve) => setTimeout(resolve, 50)); // Tiny delay simulation
+  await new Promise((resolve) => setTimeout(resolve, 50));
   return coursesData as Course[];
 }
-// --- End Mock Data Fetching ---
 
-// Server Component for listing all courses
 export default async function CoursesListPage() {
   const courses = await getAllCourses();
 
   return (
     <Box sx={{ py: 4 }}>
-      {" "}
-      {/* Add vertical padding */}
-      {/* Header Section with Playful Dialog */}
       <Box sx={{ mb: 4, textAlign: "center" }}>
         <Library
           size={48}
           color="secondary.main"
           style={{ marginBottom: "8px" }}
         />
-        {/* --- PLAYFUL DIALOG --- */}
         <Typography variant="h3" component="h1" sx={{ fontWeight: 700, mb: 1 }}>
           Explore the Course Library 📚
         </Typography>
@@ -54,14 +43,11 @@ export default async function CoursesListPage() {
           Think of this as the package manager for your brain. Browse the
           courses below and `npm install` some new knowledge! 😉
         </Typography>
-        {/* --- END PLAYFUL DIALOG --- */}
       </Box>
-      {/* Course Grid */}
       {courses && courses.length > 0 ? (
         <Grid container spacing={4}>
           {courses.map((course) => (
-            <Grid item key={course.id} size={{ xs: 12, sm: 6, md: 4 }}>
-              {/* Reusable Course Card Component would be ideal here */}
+            <Grid key={course.id} size={{ xs: 12, sm: 6, md: 4 }}>
               <Card
                 sx={{
                   height: "100%",
