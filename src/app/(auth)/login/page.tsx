@@ -11,11 +11,11 @@ import {
   Button,
   IconButton,
   Typography,
-  Divider,
+  // Divider,
   InputAdornment, // Make sure InputAdornment is imported
   CircularProgress, // Import for loading state
   Alert, // Import for error state
-  Tooltip, // Import MuiLink for styling link text
+  // Tooltip, // Import MuiLink for styling link text
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles"; // Import useTheme to access theme tokens
 import {
@@ -24,8 +24,8 @@ import {
   Code2,
   Shield,
   Rocket,
-  Github,
-  Gitlab,
+  // Github,
+  // Gitlab,
   KeyRound,
   EyeOff,
   Eye,
@@ -282,7 +282,7 @@ export default function LoginPage() {
             </Button>
           </Box>
 
-          <Box component={motion.div} variants={itemVariants}>
+          {/* <Box component={motion.div} variants={itemVariants}>
             <Divider
               sx={{
                 my: 3,
@@ -294,13 +294,13 @@ export default function LoginPage() {
                 Quick Deploy Options
               </Typography>
             </Divider>
-          </Box>
+          </Box> */}
 
-          <Box
+          {/* <Box
             component={motion.div}
             variants={itemVariants}
             sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
-            {/* Social Login Buttons - Add onClick handlers */}
+            // Social Login Buttons - Add onClick handlers 
             <Tooltip title="Login with GitHub">
               <IconButton
                 aria-label="Login with GitHub"
@@ -331,7 +331,7 @@ export default function LoginPage() {
                 <KeyRound size={24} />
               </IconButton>
             </Tooltip>
-          </Box>
+          </Box> */}
         </Box>
 
         <Typography
